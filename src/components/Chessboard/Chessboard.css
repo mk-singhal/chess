@@ -1,21 +1,8 @@
 #chessboard {
   display: grid;
-  grid-template-columns: repeat(8, 11vh);
-  grid-template-rows: repeat(8, 11vh);
-  width: 88vh;
-  height: 88vh;
+  grid-template-columns: repeat(8, 80px);
+  grid-template-rows: repeat(8, 80px);
+  width: 640px;
+  height: 640px;
   background-color: blue;
-}
-
-#chessboard .tile {
-  width: 11vh;
-  height: 11vh;
-}
-
-#chessboard .black-tile {
-  background-color: #779556;
-}
-
-#chessboard .white-tile {
-  background-color: #ebecd0;
 }
