@@ -39,10 +39,12 @@ function Chessboard() {
   let activePiece: HTMLElement | null = null;
 
   function grabPiece(e: React.MouseEvent) {
-    const element = e.target as HTMLElement;
-    if (element.classList.contains("chess-piece")) {
-      const x = e.clientX - 40;
-      const y = e.clientY - 40;
+    const element = e.target as HTMLElement;    
+    const chessBoard = chessBoardRef.current;
+
+    if (element.classList.contains("chess-piece") && chessBoard) {
+      const x = e.clientX - ((chessBoard.clientWidth)/16);
+      const y = e.clientY - ((chessBoard.clientHeight)/16);
       element.style.position = "absolute";
       element.style.left = `${x}px`;
       element.style.top = `${y}px`;
@@ -53,13 +55,14 @@ function Chessboard() {
 
   function movePiece(e: React.MouseEvent) {
     const chessBoard = chessBoardRef.current;
+    
     if (activePiece && chessBoard) {
-      const minX = chessBoard.offsetLeft-20;
-      const minY = chessBoard.offsetTop-20;
-      const maxX = chessBoard.offsetLeft + chessBoard.clientWidth - 60;
-      const maxY = chessBoard.offsetTop + chessBoard.clientHeight - 60;
-      const x = e.clientX - 40;
-      const y = e.clientY - 40;
+      const minX = chessBoard.offsetLeft - ((chessBoard.clientWidth)/32);
+      const minY = chessBoard.offsetTop - ((chessBoard.clientHeight)/32);
+      const maxX = chessBoard.offsetLeft + chessBoard.clientWidth - ((chessBoard.clientWidth*3)/32);
+      const maxY = chessBoard.offsetTop + chessBoard.clientHeight - ((chessBoard.clientHeight*3)/32);
+      const x = e.clientX - ((chessBoard.clientWidth)/16);
+      const y = e.clientY - ((chessBoard.clientHeight)/16);
       activePiece.style.position = "absolute";
       activePiece.style.left = x < minX ? `${minX}px` : (x > maxX ? `${maxX}` : `${x}px`);
       activePiece.style.top = y < minY ? `${minY}px` : (y > maxY ? `${maxY}` : `${y}px`);
@@ -68,6 +71,12 @@ function Chessboard() {
 
   function dropPiece(e: React.MouseEvent) {
     if (activePiece) {
+      setPieces((chessBoard) => {
+        const pieces = chessBoard.map((piece) => {
+
+        })
+        return pieces;
+      })
       activePiece = null;
     }
   }
