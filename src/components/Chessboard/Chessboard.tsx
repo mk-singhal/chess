@@ -33,23 +33,26 @@ for (let i = 0; i < 8; i++) {
 }
 
 function Chessboard() {
+  const [activePiece, setActivePiece] = useState<HTMLElement | null>(null);
+  const [gridX, setGridX] = useState(0);
+  const [gridY, setGridY  ] = useState(0);
   const [pieces, setPieces] = useState<Piece[]>(initialBoardState);
   const chessBoardRef = useRef<HTMLDivElement>(null);
-
-  let activePiece: HTMLElement | null = null;
 
   function grabPiece(e: React.MouseEvent) {
     const element = e.target as HTMLElement;    
     const chessBoard = chessBoardRef.current;
 
     if (element.classList.contains("chess-piece") && chessBoard) {
+      setGridX(Math.floor((e.clientX - chessBoard.offsetLeft) / ((chessBoard.clientWidth)/8)));
+      setGridY(Math.abs(Math.ceil((e.clientY - chessBoard.offsetTop - chessBoard.clientHeight) / ((chessBoard.clientHeight)/8))));
       const x = e.clientX - ((chessBoard.clientWidth)/16);
       const y = e.clientY - ((chessBoard.clientHeight)/16);
       element.style.position = "absolute";
       element.style.left = `${x}px`;
       element.style.top = `${y}px`;
 
-      activePiece = element;
+      setActivePiece(element);
     }
   }
 
@@ -70,14 +73,23 @@ function Chessboard() {
   }
 
   function dropPiece(e: React.MouseEvent) {
-    if (activePiece) {
-      setPieces((chessBoard) => {
-        const pieces = chessBoard.map((piece) => {
-
+    const chessBoard = chessBoardRef.current;
+    
+    if (activePiece && chessBoard) {
+      const x = Math.floor((e.clientX - chessBoard.offsetLeft) / ((chessBoard.clientWidth)/8));
+      const y = Math.abs(Math.ceil((e.clientY - chessBoard.offsetTop - chessBoard.clientHeight) / ((chessBoard.clientHeight)/8)));
+      
+      setPieces((board) => {
+        const pieces = board.map((piece) => {
+          if (piece.x === gridX && piece.y === gridY) {
+            piece.x = x;
+            piece.y = y;
+          }
+          return piece;
         })
         return pieces;
       })
-      activePiece = null;
+      setActivePiece(null);
     }
   }
 
