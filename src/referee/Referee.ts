@@ -134,6 +134,25 @@ export default class Referee {
       }
     }
 
+    else if (pieceType === PieceType.BISHOP) {
+      const positionFactor = {
+        x: (desiredPosition.x - initialPosition.x) / Math.abs(desiredPosition.x - initialPosition.x),
+        y: (desiredPosition.y - initialPosition.y) / Math.abs(desiredPosition.x - initialPosition.x),
+      } as Position;
+      if (Math.abs(positionFactor.x) === Math.abs(positionFactor.y)) {
+        let tmpPosition = {
+          x: initialPosition.x + positionFactor.x,
+          y: initialPosition.y + positionFactor.y,
+        } as Position;
+        while (tmpPosition.x !== desiredPosition.x) {
+          if (this.tileIsOccupied(tmpPosition, boardState)) return false;
+          tmpPosition.x += positionFactor.x;
+          tmpPosition.y += positionFactor.y;
+        }
+        return this.tileIsEmptyOrOccupiedByOpponent(tmpPosition, boardState, team);
+      }
+    }
+
     return false;
   }
 }
