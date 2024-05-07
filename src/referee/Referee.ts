@@ -135,6 +135,7 @@ export default class Referee {
     }
 
     else if (pieceType === PieceType.BISHOP) {
+      if (desiredPosition.x - initialPosition.x === 0) return false;
       const positionFactor = {
         x: (desiredPosition.x - initialPosition.x) / Math.abs(desiredPosition.x - initialPosition.x),
         y: (desiredPosition.y - initialPosition.y) / Math.abs(desiredPosition.x - initialPosition.x),
@@ -150,6 +151,33 @@ export default class Referee {
           tmpPosition.y += positionFactor.y;
         }
         return this.tileIsEmptyOrOccupiedByOpponent(tmpPosition, boardState, team);
+      }
+    }
+
+    else if (pieceType === PieceType.ROOK) {
+      if (initialPosition.x === desiredPosition.x && desiredPosition.y !== initialPosition.y) {
+        const factorY = (desiredPosition.y - initialPosition.y) / Math.abs(desiredPosition.y - initialPosition.y);
+        let tempY = initialPosition.y + factorY;
+        while (tempY !== desiredPosition.y) {
+          console.log(initialPosition.x, tempY);
+          if (
+            this.tileIsOccupied({ x: initialPosition.x, y: tempY }, boardState)
+          )
+            return false;
+          tempY += factorY;
+        }
+        return this.tileIsEmptyOrOccupiedByOpponent({ x: initialPosition.x, y: tempY }, boardState, team);
+      } else if (initialPosition.y === desiredPosition.y && desiredPosition.x !== initialPosition.x) {
+        const factorX = (desiredPosition.x - initialPosition.x) / Math.abs(desiredPosition.x - initialPosition.x);
+        let tempX = initialPosition.x + factorX;
+        while (tempX !== desiredPosition.x) {
+          if (
+            this.tileIsOccupied({ x: tempX, y: initialPosition.y }, boardState)
+          )
+            return false;
+          tempX += factorX;
+        }
+        return this.tileIsEmptyOrOccupiedByOpponent({ x: tempX, y: initialPosition.y }, boardState, team);
       }
     }
 
