@@ -1,14 +1,10 @@
-import {
-  Piece,
-  PieceType,
-  TeamType,
-} from "../components/Chessboard/Chessboard";
+import { Piece, PieceType, Position, TeamType } from "../constants";
 
 export default class Referee {
   tileIsOccupied(x: number, y: number, boardState: Piece[]): boolean {
-    // console.log("Checking is tile is occupied");
-    const piece = boardState.find((p) => p.x === x && p.y === y);
-    // console.log(piece);
+    const piece = boardState.find(
+      (p) => p.position.x === x && p.position.y === y
+    );
     return piece ? true : false;
   }
 
@@ -19,16 +15,14 @@ export default class Referee {
     team: TeamType
   ): boolean {
     const piece = boardState.find(
-      (p) => p.x === x && p.y === y && p.team !== team
+      (p) => p.position.x === x && p.position.y === y && p.team !== team
     );
     return piece ? true : false;
   }
 
   isEnPassantMove(
-    px: number,
-    py: number,
-    x: number,
-    y: number,
+    initialPosition: Position,
+    desiredPosition: Position,
     type: PieceType,
     team: TeamType,
     boardState: Piece[]
@@ -36,57 +30,86 @@ export default class Referee {
     const pawnDirection = team === TeamType.OUR ? 1 : -1;
 
     if (type === PieceType.PAWN) {
-      if ((x - px === -1 || x - px === 1) && y - py === pawnDirection) {
+      if (
+        (desiredPosition.x - initialPosition.x === -1 ||
+          desiredPosition.x - initialPosition.x === 1) &&
+        desiredPosition.y - initialPosition.y === pawnDirection
+      ) {
         const piece = boardState.find(
-          (p) => p.x === x && p.y === y - pawnDirection && p.enPassant
-        )
+          (p) =>
+            p.position.x === desiredPosition.x &&
+            p.position.y === desiredPosition.y - pawnDirection &&
+            p.enPassant
+        );
         return piece ? true : false;
       }
     }
   }
 
   isValidMove(
-    prevX: number,
-    prevY: number,
-    currX: number,
-    currY: number,
+    initialPosition: Position,
+    desiredPosition: Position,
     pieceType: PieceType,
     team: TeamType,
     boardState: Piece[]
   ) {
-    // console.log("Referee is checking the move");
-    // console.log(`Previous Location: (${prevX},${prevY})`);
-    // console.log(`Previous Location: (${currX},${currY})`);
-    // console.log(`Piece Type: ${pieceType}`);
-    // console.log(`Piece Type: ${team}`);
-
     if (pieceType === PieceType.PAWN) {
       const specialRow = team === TeamType.OUR ? 1 : 6;
       const pawnDirection = team === TeamType.OUR ? 1 : -1;
-
       // Movement Logic
       if (
-        prevY === specialRow &&
-        prevX === currX &&
-        currY - prevY === 2 * pawnDirection
+        initialPosition.y === specialRow &&
+        initialPosition.x === desiredPosition.x &&
+        desiredPosition.y - initialPosition.y === 2 * pawnDirection
       ) {
         // when pawn is on special row it can move 2 positions
         return (
-          !this.tileIsOccupied(currX, currY, boardState) &&
-          !this.tileIsOccupied(currX, currY - pawnDirection, boardState)
+          !this.tileIsOccupied(
+            desiredPosition.x,
+            desiredPosition.y,
+            boardState
+          ) &&
+          !this.tileIsOccupied(
+            desiredPosition.x,
+            desiredPosition.y - pawnDirection,
+            boardState
+          )
         );
-      } else if (prevX === currX && currY - prevY === pawnDirection) {
+      } else if (
+        initialPosition.x === desiredPosition.x &&
+        desiredPosition.y - initialPosition.y === pawnDirection
+      ) {
         // pawn can move 1 position
-        return !this.tileIsOccupied(currX, currY, boardState);
+        return !this.tileIsOccupied(
+          desiredPosition.x,
+          desiredPosition.y,
+          boardState
+        );
       }
 
       // Attacking Logic
-      else if (currX - prevX === -1 && currY - prevY === pawnDirection) {
+      else if (
+        desiredPosition.x - initialPosition.x === -1 &&
+        desiredPosition.y - initialPosition.y === pawnDirection
+      ) {
         // Attack in upper/bottom left corner
-        return this.tileIsOccupiedByOpponent(currX, currY, boardState, team);
-      } else if (currX - prevX === 1 && currY - prevY === pawnDirection) {
+        return this.tileIsOccupiedByOpponent(
+          desiredPosition.x,
+          desiredPosition.y,
+          boardState,
+          team
+        );
+      } else if (
+        desiredPosition.x - initialPosition.x === 1 &&
+        desiredPosition.y - initialPosition.y === pawnDirection
+      ) {
         // Attack in upper/bottom right corner
-        return this.tileIsOccupiedByOpponent(currX, currY, boardState, team);
+        return this.tileIsOccupiedByOpponent(
+          desiredPosition.x,
+          desiredPosition.y,
+          boardState,
+          team
+        );
       }
     }
 
