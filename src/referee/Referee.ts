@@ -231,89 +231,17 @@ export default class Referee {
     }
     return false;
   }
+  
   queenMove(
     initialPosition: Position,
     desiredPosition: Position,
     team: TeamType,
     boardState: Piece[]
   ): boolean {
-    // Vertical Movement
-    if (
-      initialPosition.x === desiredPosition.x &&
-      desiredPosition.y !== initialPosition.y
-    ) {
-      const factorY =
-        (desiredPosition.y - initialPosition.y) /
-        Math.abs(desiredPosition.y - initialPosition.y);
-      let tempY = initialPosition.y + factorY;
-      for (
-        let i = 0;
-        i < Math.abs(desiredPosition.y - initialPosition.y) - 1;
-        i++
-      ) {
-        if (this.tileIsOccupied({ x: initialPosition.x, y: tempY }, boardState))
-          return false;
-        tempY += factorY;
-      }
-      return this.tileIsEmptyOrOccupiedByOpponent(
-        { x: initialPosition.x, y: tempY },
-        boardState,
-        team
-      );
-    } else if (
-      initialPosition.y === desiredPosition.y &&
-      desiredPosition.x !== initialPosition.x
-    ) {
-      const factorX =
-        (desiredPosition.x - initialPosition.x) /
-        Math.abs(desiredPosition.x - initialPosition.x);
-      let tempX = initialPosition.x + factorX;
-      for (
-        let i = 0;
-        i < Math.abs(desiredPosition.x - initialPosition.x) - 1;
-        i++
-      ) {
-        if (this.tileIsOccupied({ x: tempX, y: initialPosition.y }, boardState))
-          return false;
-        tempX += factorX;
-      }
-      return this.tileIsEmptyOrOccupiedByOpponent(
-        { x: tempX, y: initialPosition.y },
-        boardState,
-        team
-      );
-    } else {
-      const positionFactor = {
-        x:
-          (desiredPosition.x - initialPosition.x) /
-          Math.abs(desiredPosition.x - initialPosition.x),
-        y:
-          (desiredPosition.y - initialPosition.y) /
-          Math.abs(desiredPosition.x - initialPosition.x),
-      } as Position;
-      if (Math.abs(positionFactor.x) === Math.abs(positionFactor.y)) {
-        let tmpPosition = {
-          x: initialPosition.x + positionFactor.x,
-          y: initialPosition.y + positionFactor.y,
-        } as Position;
-        for (
-          let i = 0;
-          i < Math.abs(desiredPosition.x - initialPosition.x) - 1;
-          i++
-        ) {
-          if (this.tileIsOccupied(tmpPosition, boardState)) return false;
-          tmpPosition.x += positionFactor.x;
-          tmpPosition.y += positionFactor.y;
-        }
-
-        return this.tileIsEmptyOrOccupiedByOpponent(
-          tmpPosition,
-          boardState,
-          team
-        );
-      }
-    }
-    return false;
+    
+    return this.rookMove(initialPosition, desiredPosition, team, boardState)
+      ? true
+      : this.bishopMove(initialPosition, desiredPosition, team, boardState);
   }
 
   isValidMove(
