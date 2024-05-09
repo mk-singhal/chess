@@ -1,3 +1,8 @@
+:root {
+  --chessboardSide: 640px;
+  --chessboard-modal-height: 200px;
+}
+
 #app {
   display: grid;
   place-content: center;
