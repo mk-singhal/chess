@@ -2,6 +2,7 @@ import { Piece, Position, TeamType } from "../../constants";
 import {
   tileIsOccupied,
   tileIsEmptyOrOccupiedByOpponent,
+  tileIsOccupiedByOpponent,
 } from "./GeneralRules";
 
 export const rookMove = (
@@ -56,4 +57,70 @@ export const rookMove = (
     );
   }
   return false;
+};
+
+export const getPossibleRookMoves = (rook: Piece, boardState: Piece[]) => {
+  const possibleMoves: Position[] = [];
+  // Right Movement
+  for (let i = 1; i < 8; i++) {
+    const tmpPosition: Position = {
+      x: rook.position.x + i,
+      y: rook.position.y,
+    };
+    if (!tileIsOccupied(tmpPosition, boardState)) {
+      possibleMoves.push(tmpPosition);
+    } else if (tileIsOccupiedByOpponent(tmpPosition, boardState, rook.team)) {
+      possibleMoves.push(tmpPosition);
+      break;
+    } else {
+      break;
+    }
+  }
+  // Lower Movement
+  for (let i = 1; i < 8; i++) {
+    const tmpPosition: Position = {
+      x: rook.position.x,
+      y: rook.position.y - i,
+    };
+    if (!tileIsOccupied(tmpPosition, boardState)) {
+      possibleMoves.push(tmpPosition);
+    } else if (tileIsOccupiedByOpponent(tmpPosition, boardState, rook.team)) {
+      possibleMoves.push(tmpPosition);
+      break;
+    } else {
+      break;
+    }
+  }
+  // Left Movement
+  for (let i = 1; i < 8; i++) {
+    const tmpPosition: Position = {
+      x: rook.position.x - i,
+      y: rook.position.y,
+    };
+    if (!tileIsOccupied(tmpPosition, boardState)) {
+      possibleMoves.push(tmpPosition);
+    } else if (tileIsOccupiedByOpponent(tmpPosition, boardState, rook.team)) {
+      possibleMoves.push(tmpPosition);
+      break;
+    } else {
+      break;
+    }
+  }
+  // Upper Movement
+  for (let i = 1; i < 8; i++) {
+    const tmpPosition: Position = {
+      x: rook.position.x,
+      y: rook.position.y + i,
+    };
+    if (!tileIsOccupied(tmpPosition, boardState)) {
+      possibleMoves.push(tmpPosition);
+    } else if (tileIsOccupiedByOpponent(tmpPosition, boardState, rook.team)) {
+      possibleMoves.push(tmpPosition);
+      break;
+    } else {
+      break;
+    }
+  }
+
+  return possibleMoves;
 };

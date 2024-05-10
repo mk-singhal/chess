@@ -17,3 +17,88 @@ export const kingMove = (
     ? tileIsEmptyOrOccupiedByOpponent(desiredPosition, boardState, team)
     : false;
 };
+
+export const getPossibleKingMoves = (king: Piece, boardState: Piece[]) => {
+  const possibleMoves: Position[] = [];
+  // Upper Movement
+  if (
+    tileIsEmptyOrOccupiedByOpponent(
+      { x: king.position.x, y: king.position.y + 1 },
+      boardState,
+      king.team
+    )
+  )
+    possibleMoves.push({ x: king.position.x, y: king.position.y + 1 });
+
+  // Right Movement
+  if (
+    tileIsEmptyOrOccupiedByOpponent(
+      { x: king.position.x + 1, y: king.position.y },
+      boardState,
+      king.team
+    )
+  )
+    possibleMoves.push({ x: king.position.x + 1, y: king.position.y });
+
+  // Lower Movement
+  if (
+    tileIsEmptyOrOccupiedByOpponent(
+      { x: king.position.x, y: king.position.y - 1 },
+      boardState,
+      king.team
+    )
+  )
+    possibleMoves.push({ x: king.position.x, y: king.position.y - 1 });
+
+  // Left Movement
+  if (
+    tileIsEmptyOrOccupiedByOpponent(
+      { x: king.position.x - 1, y: king.position.y },
+      boardState,
+      king.team
+    )
+  )
+    possibleMoves.push({ x: king.position.x - 1, y: king.position.y });
+
+  // Upper-left Movement
+  if (
+    tileIsEmptyOrOccupiedByOpponent(
+      { x: king.position.x - 1, y: king.position.y + 1 },
+      boardState,
+      king.team
+    )
+  )
+    possibleMoves.push({ x: king.position.x - 1, y: king.position.y + 1 });
+
+  // Upper-right Movement
+  if (
+    tileIsEmptyOrOccupiedByOpponent(
+      { x: king.position.x + 1, y: king.position.y + 1 },
+      boardState,
+      king.team
+    )
+  )
+    possibleMoves.push({ x: king.position.x + 1, y: king.position.y + 1 });
+
+  // Lower-right Movement
+  if (
+    tileIsEmptyOrOccupiedByOpponent(
+      { x: king.position.x + 1, y: king.position.y - 1 },
+      boardState,
+      king.team
+    )
+  )
+    possibleMoves.push({ x: king.position.x + 1, y: king.position.y - 1 });
+
+  // Lower-Left Movement
+  if (
+    tileIsEmptyOrOccupiedByOpponent(
+      { x: king.position.x - 1, y: king.position.y - 1 },
+      boardState,
+      king.team
+    )
+  )
+    possibleMoves.push({ x: king.position.x - 1, y: king.position.y - 1 });
+
+  return possibleMoves;
+};

@@ -1,6 +1,6 @@
 import { Piece, Position, TeamType } from "../../constants";
-import { bishopMove } from "./BishopRules";
-import { rookMove } from "./RookRules";
+import { bishopMove, getPossibleBishopMoves } from "./BishopRules";
+import { getPossibleRookMoves, rookMove } from "./RookRules";
 
 export const queenMove = (
   initialPosition: Position,
@@ -11,4 +11,10 @@ export const queenMove = (
   return rookMove(initialPosition, desiredPosition, team, boardState)
     ? true
     : bishopMove(initialPosition, desiredPosition, team, boardState);
+};
+
+export const getPossibleQueenMoves = (queen: Piece, boardState: Piece[]) => {
+  return getPossibleRookMoves(queen, boardState).concat(
+    getPossibleBishopMoves(queen, boardState)
+  );
 };
