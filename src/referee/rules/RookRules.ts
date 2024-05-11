@@ -1,4 +1,5 @@
-import { Piece, Position, TeamType } from "../../constants";
+import { TeamType } from "../../Types";
+import { Piece, Position } from "../../models";
 import {
   tileIsOccupied,
   tileIsEmptyOrOccupiedByOpponent,
@@ -24,12 +25,12 @@ export const rookMove = (
       i < Math.abs(desiredPosition.y - initialPosition.y) - 1;
       i++
     ) {
-      if (tileIsOccupied({ x: initialPosition.x, y: tempY }, boardState))
+      if (tileIsOccupied(new Position(initialPosition.x, tempY), boardState))
         return false;
       tempY += factorY;
     }
     return tileIsEmptyOrOccupiedByOpponent(
-      { x: initialPosition.x, y: tempY },
+      new Position(initialPosition.x, tempY),
       boardState,
       team
     );
@@ -46,12 +47,12 @@ export const rookMove = (
       i < Math.abs(desiredPosition.x - initialPosition.x) - 1;
       i++
     ) {
-      if (tileIsOccupied({ x: tempX, y: initialPosition.y }, boardState))
+      if (tileIsOccupied(new Position(tempX, initialPosition.y), boardState))
         return false;
       tempX += factorX;
     }
     return tileIsEmptyOrOccupiedByOpponent(
-      { x: tempX, y: initialPosition.y },
+      new Position(tempX, initialPosition.y),
       boardState,
       team
     );
@@ -63,10 +64,7 @@ export const getPossibleRookMoves = (rook: Piece, boardState: Piece[]) => {
   const possibleMoves: Position[] = [];
   // Right Movement
   for (let i = 1; i < 8; i++) {
-    const tmpPosition: Position = {
-      x: rook.position.x + i,
-      y: rook.position.y,
-    };
+    const tmpPosition = new Position(rook.position.x + i, rook.position.y);
     if (!tileIsOccupied(tmpPosition, boardState)) {
       possibleMoves.push(tmpPosition);
     } else if (tileIsOccupiedByOpponent(tmpPosition, boardState, rook.team)) {
@@ -78,10 +76,7 @@ export const getPossibleRookMoves = (rook: Piece, boardState: Piece[]) => {
   }
   // Lower Movement
   for (let i = 1; i < 8; i++) {
-    const tmpPosition: Position = {
-      x: rook.position.x,
-      y: rook.position.y - i,
-    };
+    const tmpPosition = new Position(rook.position.x, rook.position.y - i);
     if (!tileIsOccupied(tmpPosition, boardState)) {
       possibleMoves.push(tmpPosition);
     } else if (tileIsOccupiedByOpponent(tmpPosition, boardState, rook.team)) {
@@ -93,10 +88,7 @@ export const getPossibleRookMoves = (rook: Piece, boardState: Piece[]) => {
   }
   // Left Movement
   for (let i = 1; i < 8; i++) {
-    const tmpPosition: Position = {
-      x: rook.position.x - i,
-      y: rook.position.y,
-    };
+    const tmpPosition = new Position(rook.position.x - i, rook.position.y);
     if (!tileIsOccupied(tmpPosition, boardState)) {
       possibleMoves.push(tmpPosition);
     } else if (tileIsOccupiedByOpponent(tmpPosition, boardState, rook.team)) {
@@ -108,10 +100,7 @@ export const getPossibleRookMoves = (rook: Piece, boardState: Piece[]) => {
   }
   // Upper Movement
   for (let i = 1; i < 8; i++) {
-    const tmpPosition: Position = {
-      x: rook.position.x,
-      y: rook.position.y + i,
-    };
+    const tmpPosition = new Position(rook.position.x, rook.position.y + i);
     if (!tileIsOccupied(tmpPosition, boardState)) {
       possibleMoves.push(tmpPosition);
     } else if (tileIsOccupiedByOpponent(tmpPosition, boardState, rook.team)) {

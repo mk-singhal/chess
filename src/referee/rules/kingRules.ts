@@ -1,4 +1,5 @@
-import { Piece, Position, TeamType } from "../../constants";
+import { TeamType } from "../../Types";
+import { Position, Piece } from "../../models";
 import { tileIsEmptyOrOccupiedByOpponent } from "./GeneralRules";
 
 export const kingMove = (
@@ -23,82 +24,82 @@ export const getPossibleKingMoves = (king: Piece, boardState: Piece[]) => {
   // Upper Movement
   if (
     tileIsEmptyOrOccupiedByOpponent(
-      { x: king.position.x, y: king.position.y + 1 },
+      new Position(king.position.x, king.position.y + 1),
       boardState,
       king.team
     )
   )
-    possibleMoves.push({ x: king.position.x, y: king.position.y + 1 });
+    possibleMoves.push(new Position(king.position.x, king.position.y + 1));
 
   // Right Movement
   if (
     tileIsEmptyOrOccupiedByOpponent(
-      { x: king.position.x + 1, y: king.position.y },
+      new Position(king.position.x + 1, king.position.y),
       boardState,
       king.team
     )
   )
-    possibleMoves.push({ x: king.position.x + 1, y: king.position.y });
+    possibleMoves.push(new Position(king.position.x + 1, king.position.y));
 
   // Lower Movement
   if (
     tileIsEmptyOrOccupiedByOpponent(
-      { x: king.position.x, y: king.position.y - 1 },
+      new Position(king.position.x, king.position.y - 1),
       boardState,
       king.team
     )
   )
-    possibleMoves.push({ x: king.position.x, y: king.position.y - 1 });
+    possibleMoves.push(new Position(king.position.x, king.position.y - 1));
 
   // Left Movement
   if (
     tileIsEmptyOrOccupiedByOpponent(
-      { x: king.position.x - 1, y: king.position.y },
+      new Position(king.position.x - 1, king.position.y),
       boardState,
       king.team
     )
   )
-    possibleMoves.push({ x: king.position.x - 1, y: king.position.y });
+    possibleMoves.push(new Position(king.position.x - 1, king.position.y));
 
   // Upper-left Movement
   if (
     tileIsEmptyOrOccupiedByOpponent(
-      { x: king.position.x - 1, y: king.position.y + 1 },
+      new Position(king.position.x - 1, king.position.y + 1),
       boardState,
       king.team
     )
   )
-    possibleMoves.push({ x: king.position.x - 1, y: king.position.y + 1 });
+    possibleMoves.push(new Position(king.position.x - 1, king.position.y + 1));
 
   // Upper-right Movement
   if (
     tileIsEmptyOrOccupiedByOpponent(
-      { x: king.position.x + 1, y: king.position.y + 1 },
+      new Position(king.position.x + 1, king.position.y + 1),
       boardState,
       king.team
     )
   )
-    possibleMoves.push({ x: king.position.x + 1, y: king.position.y + 1 });
+    possibleMoves.push(new Position(king.position.x + 1, king.position.y + 1));
 
   // Lower-right Movement
   if (
     tileIsEmptyOrOccupiedByOpponent(
-      { x: king.position.x + 1, y: king.position.y - 1 },
+      new Position(king.position.x + 1, king.position.y - 1),
       boardState,
       king.team
     )
   )
-    possibleMoves.push({ x: king.position.x + 1, y: king.position.y - 1 });
+    possibleMoves.push(new Position(king.position.x + 1, king.position.y - 1));
 
   // Lower-Left Movement
   if (
     tileIsEmptyOrOccupiedByOpponent(
-      { x: king.position.x - 1, y: king.position.y - 1 },
+      new Position(king.position.x - 1, king.position.y - 1),
       boardState,
       king.team
     )
   )
-    possibleMoves.push({ x: king.position.x - 1, y: king.position.y - 1 });
+    possibleMoves.push(new Position(king.position.x - 1, king.position.y - 1));
 
   return possibleMoves;
 };

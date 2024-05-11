@@ -1,4 +1,5 @@
-import { Piece, Position, TeamType } from "../../constants";
+import { TeamType } from "../../Types";
+import { Position, Piece } from "../../models";
 import { bishopMove, getPossibleBishopMoves } from "./BishopRules";
 import { getPossibleRookMoves, rookMove } from "./RookRules";
 

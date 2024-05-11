@@ -1,16 +1,8 @@
 import { useRef, useState } from "react";
 import Tile from "../Tile/Tile";
 import "./Chessboard.css";
-import {
-  VERTICAL_AXIS,
-  HORIZONTAL_AXIS,
-  Piece,
-  TeamType,
-  PieceType,
-  initialBoardState,
-  Position,
-  samePosition,
-} from "../../constants";
+import { VERTICAL_AXIS, HORIZONTAL_AXIS } from "../../constants";
+import { Piece, Position } from "../../models";
 
 interface Props {
   playMove: (playedPiece: Piece, position: Position) => boolean;
@@ -19,7 +11,9 @@ interface Props {
 
 function Chessboard({ playMove, pieces }: Props) {
   const [activePiece, setActivePiece] = useState<HTMLElement | null>(null);
-  const [grabPosition, setGrabPosition] = useState<Position>({ x: -1, y: -1 });
+  const [grabPosition, setGrabPosition] = useState<Position>(
+    new Position(-1, -1)
+  );
   const chessBoardRef = useRef<HTMLDivElement>(null);
 
   function grabPiece(e: React.MouseEvent) {
@@ -38,7 +32,7 @@ function Chessboard({ playMove, pieces }: Props) {
             (chessBoard.clientHeight / 8)
         )
       );
-      setGrabPosition({ x: grabX, y: grabY });
+      setGrabPosition(new Position(grabX, grabY));
 
       const x = e.clientX - chessBoard.clientWidth / 16;
       const y = e.clientY - chessBoard.clientHeight / 16;
@@ -93,11 +87,11 @@ function Chessboard({ playMove, pieces }: Props) {
       );
 
       const currentPiece = pieces.find((p) =>
-        samePosition(p.position, grabPosition)
+        p.samePosition(grabPosition)
       );
 
       if (currentPiece) {
-        var success = playMove(currentPiece, { x, y });
+        var success = playMove(currentPiece, new Position(x, y));
 
         if (!success) {
           // RESETS the piece position
@@ -117,17 +111,17 @@ function Chessboard({ playMove, pieces }: Props) {
     for (let i = 0; i < HORIZONTAL_AXIS.length; i++) {
       const number = j + i + 2;
       const piece = pieces.find((p) =>
-        samePosition(p.position, { x: i, y: j })
+        p.samePosition(new Position(i, j))
       );
       let image = piece ? piece.image : undefined;
 
       let currentPiece =
         activePiece !== null
-          ? pieces.find((p) => samePosition(p.position, grabPosition))
+          ? pieces.find((p) => p.samePosition(grabPosition))
           : undefined;
       let highlight = currentPiece?.possibleMoves
         ? currentPiece.possibleMoves.some((p) =>
-            samePosition(p, { x: i, y: j })
+            p.samePosition(new Position(i, j))
           )
         : false;
 

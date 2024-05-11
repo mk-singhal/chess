@@ -1,4 +1,5 @@
-import { Piece, Position, TeamType } from "../../constants";
+import { TeamType } from "../../Types";
+import { Piece, Position } from "../../models";
 import {
   tileIsOccupied,
   tileIsEmptyOrOccupiedByOpponent,
@@ -12,19 +13,17 @@ export const bishopMove = (
   boardState: Piece[]
 ): boolean => {
   if (desiredPosition.x - initialPosition.x === 0) return false;
-  const positionFactor = {
-    x:
-      (desiredPosition.x - initialPosition.x) /
+  const positionFactor = new Position(
+    (desiredPosition.x - initialPosition.x) /
       Math.abs(desiredPosition.x - initialPosition.x),
-    y:
-      (desiredPosition.y - initialPosition.y) /
-      Math.abs(desiredPosition.x - initialPosition.x),
-  } as Position;
+    (desiredPosition.y - initialPosition.y) /
+      Math.abs(desiredPosition.x - initialPosition.x)
+  );
   if (Math.abs(positionFactor.x) === Math.abs(positionFactor.y)) {
-    let tmpPosition = {
-      x: initialPosition.x + positionFactor.x,
-      y: initialPosition.y + positionFactor.y,
-    } as Position;
+    let tmpPosition = new Position(
+      initialPosition.x + positionFactor.x,
+      initialPosition.y + positionFactor.y
+    );
     for (
       let i = 0;
       i < Math.abs(desiredPosition.x - initialPosition.x) - 1;
@@ -44,10 +43,10 @@ export const getPossibleBishopMoves = (bishop: Piece, boardState: Piece[]) => {
   const possibleMoves: Position[] = [];
   // Upper-right Movement
   for (let i = 1; i < 8; i++) {
-    const tmpPosition: Position = {
-      x: bishop.position.x + i,
-      y: bishop.position.y + i,
-    };
+    const tmpPosition = new Position(
+      bishop.position.x + i,
+      bishop.position.y + i
+    );
     if (!tileIsOccupied(tmpPosition, boardState)) {
       possibleMoves.push(tmpPosition);
     } else if (tileIsOccupiedByOpponent(tmpPosition, boardState, bishop.team)) {
@@ -59,10 +58,10 @@ export const getPossibleBishopMoves = (bishop: Piece, boardState: Piece[]) => {
   }
   // Lower-right Movement
   for (let i = 1; i < 8; i++) {
-    const tmpPosition: Position = {
-      x: bishop.position.x + i,
-      y: bishop.position.y - i,
-    };
+    const tmpPosition = new Position(
+      bishop.position.x + i,
+      bishop.position.y - i
+    );
     if (!tileIsOccupied(tmpPosition, boardState)) {
       possibleMoves.push(tmpPosition);
     } else if (tileIsOccupiedByOpponent(tmpPosition, boardState, bishop.team)) {
@@ -74,10 +73,10 @@ export const getPossibleBishopMoves = (bishop: Piece, boardState: Piece[]) => {
   }
   // Lower-left Movement
   for (let i = 1; i < 8; i++) {
-    const tmpPosition: Position = {
-      x: bishop.position.x - i,
-      y: bishop.position.y - i,
-    };
+    const tmpPosition = new Position(
+      bishop.position.x - i,
+      bishop.position.y - i
+    );
     if (!tileIsOccupied(tmpPosition, boardState)) {
       possibleMoves.push(tmpPosition);
     } else if (tileIsOccupiedByOpponent(tmpPosition, boardState, bishop.team)) {
@@ -89,10 +88,10 @@ export const getPossibleBishopMoves = (bishop: Piece, boardState: Piece[]) => {
   }
   // Upper-left Movement
   for (let i = 1; i < 8; i++) {
-    const tmpPosition: Position = {
-      x: bishop.position.x - i,
-      y: bishop.position.y + i,
-    };
+    const tmpPosition = new Position(
+      bishop.position.x - i,
+      bishop.position.y + i
+    );
     if (!tileIsOccupied(tmpPosition, boardState)) {
       possibleMoves.push(tmpPosition);
     } else if (tileIsOccupiedByOpponent(tmpPosition, boardState, bishop.team)) {
