@@ -1,10 +1,10 @@
-import { Pawn, Piece, Position } from "./models/index";
+import { Board, Pawn, Piece, Position } from "./models/index";
 import { PieceType, TeamType } from "./Types";
 
 export const VERTICAL_AXIS = ["1", "2", "3", "4", "5", "6", "7", "8"];
 export const HORIZONTAL_AXIS = ["a", "b", "c", "d", "e", "f", "g", "h"];
 
-export const initialBoardState: Piece[] = [
+export const initialBoard = new Board([
   new Piece(new Position(0, 7), PieceType.ROOK, TeamType.OPPONENT),
   new Piece(new Position(1, 7), PieceType.KNIGHT, TeamType.OPPONENT),
   new Piece(new Position(2, 7), PieceType.BISHOP, TeamType.OPPONENT),
@@ -38,4 +38,4 @@ export const initialBoardState: Piece[] = [
   new Pawn(new Position(5, 1), TeamType.OUR),
   new Pawn(new Position(6, 1), TeamType.OUR),
   new Pawn(new Position(7, 1), TeamType.OUR),
-];
+]);
