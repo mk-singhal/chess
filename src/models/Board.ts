@@ -7,78 +7,68 @@ import {
   getPossibleQueenMoves,
   getPossibleRookMoves,
 } from "../referee/rules";
-import { Pawn } from "./Pawn";
-import { Piece } from "./Piece";
-import { Position } from "./Position";
+import { Pawn, Piece, Position } from "./index";
 
 export class Board {
   pieces: Piece[];
+  totalTurns: number;
 
-  constructor(pieces: Piece[]) {
+  constructor(pieces: Piece[], totalTurns: number) {
     this.pieces = pieces;
+    this.totalTurns = totalTurns;
+  }
+
+  get currentTeam(): TeamType {
+    return this.totalTurns % 2 === 0 ? TeamType.OPPONENT : TeamType.OUR;
   }
 
   calculateAllMoves() {
+    // Calculate the moves for all the pieces
     for (const piece of this.pieces) {
       piece.possibleMoves = this.getValidMoves(piece, this.pieces);
     }
-    this.checkKingMoves();
+
+    // Check if the king moves are valid
+    this.checkCurrentTeamMoves();
+
+    // Remove the possible moves for the team that is not playing
+    for (const piece of this.pieces.filter(p => p.team != this.currentTeam)) {
+      piece.possibleMoves = [];
+    }
   }
 
-  checkKingMoves() {
-    const king = this.pieces.find(
-      (p) => p.isKing && p.team === TeamType.OPPONENT
-    );
-    if (king?.possibleMoves === undefined) return;
+  checkCurrentTeamMoves() {
+    // Loop through all the current team's piececs
+    for (const piece of this.pieces.filter(p => p.team === this.currentTeam)) {
+      if (piece.possibleMoves === undefined) continue;
 
-    // Simulate all the King moves
-    for (const move of king.possibleMoves) {
-      const simulatedBoard = this.clone();
+      // Simulate all the piece moves
+      for (const move of piece.possibleMoves) {
+        const simulatedBoard = this.clone();
 
-      // Remove the piece if it is at the king's destination
-      simulatedBoard.pieces = simulatedBoard.pieces.filter(
-        (p) => !p.samePosition(move)
-      );
+        simulatedBoard.pieces = simulatedBoard.pieces.filter(p => !p.samePosition(move));
 
-      // We tell the compiler that the simulated king is always present
-      const simulatedKing = simulatedBoard.pieces.find(
-        (p) => p.isKing && p.team === TeamType.OPPONENT
-      );
-      simulatedKing!.position = move;
+        const clonedPiece = simulatedBoard.pieces.find(p => p.samePiecePosition(piece))!;
+        clonedPiece.position = move.clone();
 
-      for (const enemy of simulatedBoard.pieces.filter(
-        (p) => p.team === TeamType.OUR
-      ))
-        enemy.possibleMoves = simulatedBoard.getValidMoves(
-          enemy,
-          simulatedBoard.pieces
-        );
+        const clonedKing = simulatedBoard.pieces.find(p => p.isKing && p.team === this.currentTeam)!;
 
-      let safe = true;
+        for (const enemy of simulatedBoard.pieces.filter(p => p.team !== simulatedBoard.currentTeam)) {
+          enemy.possibleMoves = simulatedBoard.getValidMoves(enemy, simulatedBoard.pieces);
 
-      // Determine if the move is safe
-      for (const p of simulatedBoard.pieces) {
-        if (p.team === TeamType.OPPONENT) continue;
-        if (p.isPawn) {
-          const possiblePawnMoves = getPossiblePawnMoves(
-            p,
-            simulatedBoard.pieces
-          );
-          if (possiblePawnMoves.some((ppm) => ppm.samePosition(move))) {
-            safe = false;
-            break;
+          if (enemy.isPawn) {
+            if (enemy.possibleMoves.some(m => m.x !== enemy.position.x && m.samePosition(clonedKing.position))) {
+              piece.possibleMoves = piece.possibleMoves?.filter(m => !m.samePosition(move));
+              break;
+            }
+          } else {
+            if (enemy.possibleMoves.some(m => m.samePosition(clonedKing.position))) {
+              piece.possibleMoves = piece.possibleMoves?.filter(m => !m.samePosition(move));
+              break;
+            }
           }
-        } else if (p.possibleMoves?.some((p) => p.samePosition(move))) {
-          safe = false;
-          break;
-        }
-      }
 
-      // Remove the move from possible-moves
-      if (!safe) {
-        king.possibleMoves = king.possibleMoves.filter(
-          (m) => !m.samePosition(move)
-        );
+        }
       }
     }
   }
@@ -165,6 +155,9 @@ export class Board {
   }
 
   clone(): Board {
-    return new Board(this.pieces.map((p) => p.clone()));
+    return new Board(
+      this.pieces.map((p) => p.clone()),
+      this.totalTurns
+    );
   }
 }
