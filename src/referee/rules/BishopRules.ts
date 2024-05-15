@@ -4,6 +4,7 @@ import {
   tileIsOccupied,
   tileIsEmptyOrOccupiedByOpponent,
   tileIsOccupiedByOpponent,
+  positionOutOfBoard,
 } from "./GeneralRules";
 
 export const bishopMove = (
@@ -47,6 +48,9 @@ export const getPossibleBishopMoves = (bishop: Piece, boardState: Piece[]) => {
       bishop.position.x + i,
       bishop.position.y + i
     );
+
+    if (positionOutOfBoard(tmpPosition)) break;
+
     if (!tileIsOccupied(tmpPosition, boardState)) {
       possibleMoves.push(tmpPosition);
     } else if (tileIsOccupiedByOpponent(tmpPosition, boardState, bishop.team)) {
@@ -62,6 +66,9 @@ export const getPossibleBishopMoves = (bishop: Piece, boardState: Piece[]) => {
       bishop.position.x + i,
       bishop.position.y - i
     );
+
+    if (positionOutOfBoard(tmpPosition)) break;
+
     if (!tileIsOccupied(tmpPosition, boardState)) {
       possibleMoves.push(tmpPosition);
     } else if (tileIsOccupiedByOpponent(tmpPosition, boardState, bishop.team)) {
@@ -77,6 +84,9 @@ export const getPossibleBishopMoves = (bishop: Piece, boardState: Piece[]) => {
       bishop.position.x - i,
       bishop.position.y - i
     );
+
+    if (positionOutOfBoard(tmpPosition)) break;
+
     if (!tileIsOccupied(tmpPosition, boardState)) {
       possibleMoves.push(tmpPosition);
     } else if (tileIsOccupiedByOpponent(tmpPosition, boardState, bishop.team)) {
@@ -92,6 +102,9 @@ export const getPossibleBishopMoves = (bishop: Piece, boardState: Piece[]) => {
       bishop.position.x - i,
       bishop.position.y + i
     );
+
+    if (positionOutOfBoard(tmpPosition)) break;
+
     if (!tileIsOccupied(tmpPosition, boardState)) {
       possibleMoves.push(tmpPosition);
     } else if (tileIsOccupiedByOpponent(tmpPosition, boardState, bishop.team)) {

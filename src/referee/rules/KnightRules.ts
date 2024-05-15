@@ -1,6 +1,9 @@
 import { TeamType } from "../../Types";
 import { Position, Piece } from "../../models";
-import { tileIsEmptyOrOccupiedByOpponent } from "./GeneralRules";
+import {
+  positionOutOfBoard,
+  tileIsEmptyOrOccupiedByOpponent,
+} from "./GeneralRules";
 
 export const knightMove = (
   initialPosition: Position,
@@ -43,6 +46,9 @@ export const getPossibleKnightMoves = (knight: Piece, boardState: Piece[]) => {
           new Position(knight.position.x + 1 * i, knight.position.y + 2 * j),
           boardState,
           knight.team
+        ) &&
+        !positionOutOfBoard(
+          new Position(knight.position.x + 1 * i, knight.position.y + 2 * j)
         )
       ) {
         possibleMoves.push(
@@ -54,6 +60,9 @@ export const getPossibleKnightMoves = (knight: Piece, boardState: Piece[]) => {
           new Position(knight.position.x + 2 * i, knight.position.y + 1 * j),
           boardState,
           knight.team
+        ) &&
+        !positionOutOfBoard(
+          new Position(knight.position.x + 2 * i, knight.position.y + 1 * j)
         )
       ) {
         possibleMoves.push(

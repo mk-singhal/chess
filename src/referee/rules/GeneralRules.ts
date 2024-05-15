@@ -1,6 +1,10 @@
 import { TeamType } from "../../Types";
 import { Position, Piece } from "../../models";
 
+export const positionOutOfBoard = (position: Position): boolean => {
+  return position.x < 0 || position.x > 7 || position.y < 0 || position.y > 7;
+};
+
 export const tileIsEmptyOrOccupiedByOpponent = (
   position: Position,
   boardState: Piece[],

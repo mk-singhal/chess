@@ -1,5 +1,6 @@
 import { PieceType, TeamType } from "../Types";
 import {
+  getCastlingMoves,
   getPossibleBishopMoves,
   getPossibleKingMoves,
   getPossibleKnightMoves,
@@ -24,10 +25,18 @@ export class Board {
 
   calculateAllMoves() {
     // Calculate the moves for all the pieces
-    for (const piece of this.pieces.filter(
-      (p) => p.team === this.currentTeam
-    )) {
+    for (const piece of this.pieces) {
       piece.possibleMoves = this.getValidMoves(piece, this.pieces);
+    }
+
+    const king = this.pieces.find(
+      (p) => p.isKing && p.team === this.currentTeam
+    );
+    if (king && king.possibleMoves !== undefined) {
+      king.possibleMoves = [
+        ...king.possibleMoves,
+        ...getCastlingMoves(king, this.pieces),
+      ];
     }
 
     // Check if the piece moves are valid
@@ -50,6 +59,8 @@ export class Board {
 
       // Simulate all the piece moves
       for (const move of piece.possibleMoves) {
+        // console.log("Move");
+        
         const simulatedBoard = this.clone();
 
         simulatedBoard.pieces = simulatedBoard.pieces.filter(
@@ -68,6 +79,8 @@ export class Board {
         for (const enemy of simulatedBoard.pieces.filter(
           (p) => p.team !== simulatedBoard.currentTeam
         )) {
+          console.log("GetValid Moves called");
+          
           enemy.possibleMoves = simulatedBoard.getValidMoves(
             enemy,
             simulatedBoard.pieces
