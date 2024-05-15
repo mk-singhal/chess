@@ -2,15 +2,16 @@ import { PieceType, TeamType } from "../Types";
 import { Piece, Position } from "./index";
 
 export class Pawn extends Piece {
-  enPassant?: Boolean;
+  enPassant?: boolean;
 
   constructor(
     position: Position,
     team: TeamType,
-    enPassant?: Boolean,
+    hasMoved: boolean,
+    enPassant?: boolean,
     possibleMoves: Position[] = []
   ) {
-    super(position, PieceType.PAWN, team, possibleMoves);
+    super(position, PieceType.PAWN, team, hasMoved, possibleMoves);
     this.enPassant = enPassant;
   }
 
@@ -18,6 +19,7 @@ export class Pawn extends Piece {
     return new Pawn(
       this.position.clone(),
       this.team,
+      this.hasMoved,
       this.enPassant,
       this.possibleMoves?.map((m) => m.clone())
     );

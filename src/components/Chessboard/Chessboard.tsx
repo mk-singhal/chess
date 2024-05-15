@@ -86,9 +86,7 @@ function Chessboard({ playMove, pieces }: Props) {
         )
       );
 
-      const currentPiece = pieces.find((p) =>
-        p.samePosition(grabPosition)
-      );
+      const currentPiece = pieces.find((p) => p.samePosition(grabPosition));
 
       if (currentPiece) {
         var success = playMove(currentPiece.clone(), new Position(x, y));
@@ -110,9 +108,7 @@ function Chessboard({ playMove, pieces }: Props) {
   for (let j = VERTICAL_AXIS.length - 1; j >= 0; j--) {
     for (let i = 0; i < HORIZONTAL_AXIS.length; i++) {
       const number = j + i + 2;
-      const piece = pieces.find((p) =>
-        p.samePosition(new Position(i, j))
-      );
+      const piece = pieces.find((p) => p.samePosition(new Position(i, j)));
       let image = piece ? piece.image : undefined;
 
       let currentPiece =

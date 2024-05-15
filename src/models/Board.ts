@@ -24,50 +24,80 @@ export class Board {
 
   calculateAllMoves() {
     // Calculate the moves for all the pieces
-    for (const piece of this.pieces) {
+    for (const piece of this.pieces.filter(
+      (p) => p.team === this.currentTeam
+    )) {
       piece.possibleMoves = this.getValidMoves(piece, this.pieces);
     }
 
-    // Check if the king moves are valid
+    // Check if the piece moves are valid
     this.checkCurrentTeamMoves();
 
     // Remove the possible moves for the team that is not playing
-    for (const piece of this.pieces.filter(p => p.team != this.currentTeam)) {
+    for (const piece of this.pieces.filter(
+      (p) => p.team !== this.currentTeam
+    )) {
       piece.possibleMoves = [];
     }
   }
 
   checkCurrentTeamMoves() {
     // Loop through all the current team's piececs
-    for (const piece of this.pieces.filter(p => p.team === this.currentTeam)) {
+    for (const piece of this.pieces.filter(
+      (p) => p.team === this.currentTeam
+    )) {
       if (piece.possibleMoves === undefined) continue;
 
       // Simulate all the piece moves
       for (const move of piece.possibleMoves) {
         const simulatedBoard = this.clone();
 
-        simulatedBoard.pieces = simulatedBoard.pieces.filter(p => !p.samePosition(move));
+        simulatedBoard.pieces = simulatedBoard.pieces.filter(
+          (p) => !p.samePosition(move)
+        );
 
-        const clonedPiece = simulatedBoard.pieces.find(p => p.samePiecePosition(piece))!;
+        const clonedPiece = simulatedBoard.pieces.find((p) =>
+          p.samePiecePosition(piece)
+        )!;
         clonedPiece.position = move.clone();
 
-        const clonedKing = simulatedBoard.pieces.find(p => p.isKing && p.team === this.currentTeam)!;
+        const clonedKing = simulatedBoard.pieces.find(
+          (p) => p.isKing && p.team === this.currentTeam
+        )!;
 
-        for (const enemy of simulatedBoard.pieces.filter(p => p.team !== simulatedBoard.currentTeam)) {
-          enemy.possibleMoves = simulatedBoard.getValidMoves(enemy, simulatedBoard.pieces);
+        for (const enemy of simulatedBoard.pieces.filter(
+          (p) => p.team !== simulatedBoard.currentTeam
+        )) {
+          enemy.possibleMoves = simulatedBoard.getValidMoves(
+            enemy,
+            simulatedBoard.pieces
+          );
 
           if (enemy.isPawn) {
-            if (enemy.possibleMoves.some(m => m.x !== enemy.position.x && m.samePosition(clonedKing.position))) {
-              piece.possibleMoves = piece.possibleMoves?.filter(m => !m.samePosition(move));
+            if (
+              enemy.possibleMoves.some(
+                (m) =>
+                  m.x !== enemy.position.x &&
+                  m.samePosition(clonedKing.position)
+              )
+            ) {
+              piece.possibleMoves = piece.possibleMoves?.filter(
+                (m) => !m.samePosition(move)
+              );
               break;
             }
           } else {
-            if (enemy.possibleMoves.some(m => m.samePosition(clonedKing.position))) {
-              piece.possibleMoves = piece.possibleMoves?.filter(m => !m.samePosition(move));
+            if (
+              enemy.possibleMoves.some((m) =>
+                m.samePosition(clonedKing.position)
+              )
+            ) {
+              piece.possibleMoves = piece.possibleMoves?.filter(
+                (m) => !m.samePosition(move)
+              );
               break;
             }
           }
-
         }
       }
     }
@@ -106,6 +136,7 @@ export class Board {
           if (piece.isPawn) (piece as Pawn).enPassant = false;
           piece.position.x = destination.x;
           piece.position.y = destination.y;
+          piece.hasMoved = true;
           results.push(piece);
         } else if (
           !piece.samePosition(
@@ -134,6 +165,7 @@ export class Board {
 
           piece.position.x = destination.x;
           piece.position.y = destination.y;
+          piece.hasMoved = true;
 
           results.push(piece);
         } else if (!piece.samePosition(destination)) {
