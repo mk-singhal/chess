@@ -13,6 +13,7 @@ import { Pawn, Piece, Position } from "./index";
 export class Board {
   pieces: Piece[];
   totalTurns: number;
+  winningTeam?: TeamType;
 
   constructor(pieces: Piece[], totalTurns: number) {
     this.pieces = pieces;
@@ -48,6 +49,19 @@ export class Board {
     )) {
       piece.possibleMoves = [];
     }
+
+    // Check if the playing team still has moves left otherwise, checkmate!
+    if (
+      this.pieces
+        .filter((p) => p.team === this.currentTeam)
+        .some(
+          (p) => p.possibleMoves !== undefined && p.possibleMoves.length > 0
+        )
+    )
+      return;
+
+    this.winningTeam =
+      this.currentTeam === TeamType.OUR ? TeamType.OPPONENT : TeamType.OUR;
   }
 
   checkCurrentTeamMoves() {
@@ -60,7 +74,7 @@ export class Board {
       // Simulate all the piece moves
       for (const move of piece.possibleMoves) {
         // console.log("Move");
-        
+
         const simulatedBoard = this.clone();
 
         simulatedBoard.pieces = simulatedBoard.pieces.filter(
@@ -80,7 +94,7 @@ export class Board {
           (p) => p.team !== simulatedBoard.currentTeam
         )) {
           console.log("GetValid Moves called");
-          
+
           enemy.possibleMoves = simulatedBoard.getValidMoves(
             enemy,
             simulatedBoard.pieces
@@ -142,6 +156,31 @@ export class Board {
     destination: Position
   ): boolean {
     const pawnDirection = playedPiece.team === TeamType.OUR ? 1 : -1;
+    const destinationPiece = this.pieces.find((p) =>
+      p.samePosition(destination)
+    );
+
+    // If the move is a castling move
+    if (
+      playedPiece.isKing &&
+      destinationPiece?.isRook &&
+      destinationPiece.team === playedPiece.team
+    ) {
+      const direction =
+        destinationPiece.position.x - playedPiece.position.x > 0 ? 1 : -1;
+      const newKingXPosition = playedPiece.position.x + direction * 2;
+      this.pieces = this.pieces.map((p) => {
+        if (p.samePiecePosition(playedPiece)) {
+          p.position.x = newKingXPosition;
+        } else if (p.samePiecePosition(destinationPiece)) {
+          p.position.x = newKingXPosition - direction;
+        }
+
+        return p;
+      });
+      this.calculateAllMoves();
+      return true;
+    }
 
     if (enPassantMove) {
       this.pieces = this.pieces.reduce((results, piece) => {

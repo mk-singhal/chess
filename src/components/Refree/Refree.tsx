@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { initialBoard } from "../../constants";
 import Chessboard from "../Chessboard/Chessboard";
+import "./Refree.css";
 import {
   bishopMove,
   kingMove,
@@ -16,6 +17,7 @@ export default function Referee() {
   const [board, setBoard] = useState<Board>(initialBoard);
   const [promotionPawn, setPromotionPawn] = useState<Piece>();
   const modalRef = useRef<HTMLDivElement>(null);
+  const checkmateModalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     board.calculateAllMoves();
@@ -52,6 +54,11 @@ export default function Referee() {
         playedPiece,
         destination
       );
+
+      if (clonedBoard.winningTeam !== undefined) {
+        checkmateModalRef.current?.classList.remove("hidden");
+      }
+
       return clonedBoard;
     });
 
@@ -189,6 +196,14 @@ export default function Referee() {
   return (
     <>
       <p className="total-turns">{board.totalTurns}</p>
+      <div id="check-mate-modal" className="hidden" ref={checkmateModalRef}>
+        <div className="modal-body">
+          <span className="text1">Checkmate</span>
+          <span className="text2">
+            {board.winningTeam === TeamType.OUR ? "You" : "Opponent"} won
+          </span>
+        </div>
+      </div>
       <div id="pawn-promotion-modal" className="hidden" ref={modalRef}>
         <div className="modal-body">
           <img

@@ -1,6 +1,9 @@
 import { TeamType } from "../../Types";
 import { Position, Piece } from "../../models";
-import { tileIsEmptyOrOccupiedByOpponent } from "./GeneralRules";
+import {
+  positionOutOfBoard,
+  tileIsEmptyOrOccupiedByOpponent,
+} from "./GeneralRules";
 
 export const kingMove = (
   initialPosition: Position,
@@ -27,7 +30,8 @@ export const getPossibleKingMoves = (king: Piece, boardState: Piece[]) => {
       new Position(king.position.x, king.position.y + 1),
       boardState,
       king.team
-    )
+    ) &&
+    !positionOutOfBoard(new Position(king.position.x, king.position.y + 1))
   )
     possibleMoves.push(new Position(king.position.x, king.position.y + 1));
 
@@ -37,7 +41,8 @@ export const getPossibleKingMoves = (king: Piece, boardState: Piece[]) => {
       new Position(king.position.x + 1, king.position.y),
       boardState,
       king.team
-    )
+    ) &&
+    !positionOutOfBoard(new Position(king.position.x + 1, king.position.y))
   )
     possibleMoves.push(new Position(king.position.x + 1, king.position.y));
 
@@ -47,7 +52,8 @@ export const getPossibleKingMoves = (king: Piece, boardState: Piece[]) => {
       new Position(king.position.x, king.position.y - 1),
       boardState,
       king.team
-    )
+    ) &&
+    !positionOutOfBoard(new Position(king.position.x, king.position.y - 1))
   )
     possibleMoves.push(new Position(king.position.x, king.position.y - 1));
 
@@ -57,7 +63,8 @@ export const getPossibleKingMoves = (king: Piece, boardState: Piece[]) => {
       new Position(king.position.x - 1, king.position.y),
       boardState,
       king.team
-    )
+    ) &&
+    !positionOutOfBoard(new Position(king.position.x - 1, king.position.y))
   )
     possibleMoves.push(new Position(king.position.x - 1, king.position.y));
 
@@ -67,7 +74,8 @@ export const getPossibleKingMoves = (king: Piece, boardState: Piece[]) => {
       new Position(king.position.x - 1, king.position.y + 1),
       boardState,
       king.team
-    )
+    ) &&
+    !positionOutOfBoard(new Position(king.position.x - 1, king.position.y + 1))
   )
     possibleMoves.push(new Position(king.position.x - 1, king.position.y + 1));
 
@@ -77,7 +85,8 @@ export const getPossibleKingMoves = (king: Piece, boardState: Piece[]) => {
       new Position(king.position.x + 1, king.position.y + 1),
       boardState,
       king.team
-    )
+    ) &&
+    !positionOutOfBoard(new Position(king.position.x + 1, king.position.y + 1))
   )
     possibleMoves.push(new Position(king.position.x + 1, king.position.y + 1));
 
@@ -87,7 +96,8 @@ export const getPossibleKingMoves = (king: Piece, boardState: Piece[]) => {
       new Position(king.position.x + 1, king.position.y - 1),
       boardState,
       king.team
-    )
+    ) &&
+    !positionOutOfBoard(new Position(king.position.x + 1, king.position.y - 1))
   )
     possibleMoves.push(new Position(king.position.x + 1, king.position.y - 1));
 
@@ -97,7 +107,8 @@ export const getPossibleKingMoves = (king: Piece, boardState: Piece[]) => {
       new Position(king.position.x - 1, king.position.y - 1),
       boardState,
       king.team
-    )
+    ) &&
+    !positionOutOfBoard(new Position(king.position.x - 1, king.position.y - 1))
   )
     possibleMoves.push(new Position(king.position.x - 1, king.position.y - 1));
 
