@@ -1,13 +1,13 @@
 .tile {
   display: grid;
   place-content: center;
-  width: 80px;
-  height: 80px;
+  width: calc(var(--chessboardSide) / 8);
+  height: calc(var(--chessboardSide) / 8);
 }
 
 .tile .chess-piece {
-  width: 80px;
-  height: 80px;
+  width: calc(var(--chessboardSide) / 8);
+  height: calc(var(--chessboardSide) / 8);
   background-repeat: no-repeat;
   background-position: center;
   background-size: 60px;
@@ -30,7 +30,7 @@
 }
 
 .tile img {
-  width: 80px;
+  width: calc(var(--chessboardSide) / 8);
 }
 
 .tile-highlight:not(.chess-piece-tile)::before {
@@ -44,8 +44,8 @@
 .tile-highlight.chess-piece-tile::before {
   position: absolute;
   content: " ";
-  width: 70px;
-  height: 70px;
+  width: calc(var(--chessboardSide) / 8);
+  height: calc(var(--chessboardSide) / 8);
   border: 5px solid rgba(0, 0, 0, 0.4);
   border-radius: 50%;
 }

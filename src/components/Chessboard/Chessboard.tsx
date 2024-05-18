@@ -37,6 +37,7 @@ function Chessboard({ playMove, pieces }: Props) {
       const x = e.clientX - chessBoard.clientWidth / 16;
       const y = e.clientY - chessBoard.clientHeight / 16;
       element.style.position = "absolute";
+      element.style.zIndex = "1";
       element.style.left = `${x}px`;
       element.style.top = `${y}px`;
 
@@ -94,6 +95,7 @@ function Chessboard({ playMove, pieces }: Props) {
         if (!success) {
           // RESETS the piece position
           activePiece.style.position = "relative";
+          activePiece.style.zIndex = "auto";
           activePiece.style.removeProperty("left");
           activePiece.style.removeProperty("top");
         }
