@@ -5,14 +5,25 @@
 
 #app {
   display: grid;
-  place-content: center;
-  min-height: 100vh;
-  background-color: #202020;
+  grid-template-columns: 13rem calc(100% - 13rem);
+  grid-template-rows: 100vh 100vh;
 }
 
-.total-turns {
-  color: white;
-  font-size: 24px;
-  position: absolute;
-  left: 50px;
+.main {
+  background-color: #342928;
+}
+
+@media screen and (max-width: 1250px) {
+  #app {
+    grid-template-columns: 4rem calc(100% - 4rem);
+    grid-template-rows: 100vh 100vh;
+  }
+}
+
+/* On screens that are 600px wide or less, the background color is olive */
+@media screen and (max-width: 960px) {
+  #app {
+    grid-template-columns: none;
+    grid-template-rows: 69px calc(100vh - 69px);
+  }
 }
